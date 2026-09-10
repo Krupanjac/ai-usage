@@ -1,0 +1,13 @@
+Install AIUsage
+
+1. Quit any running AIUsage copies from their menu bar popovers.
+2. Drag AIUsage.app onto the Applications folder in this window.
+3. If asked, choose Replace to update the existing AIUsage.app.
+4. Eject this disk image, then open AIUsage from Applications.
+
+Look for the blue icon with turquoise, mint, and amber usage bars.
+AIUsage runs in the menu bar and has no Dock icon.
+
+The information button in the popover shows the app version and where
+that copy is running from. Launch at login is optional and stays off
+until you enable it in the app.

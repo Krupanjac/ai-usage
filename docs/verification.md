@@ -37,3 +37,21 @@ footprint -p AIUsage --noCategories
 ```
 
 The benchmark and independent verifier do not make quota requests. Scratch measurements and screenshots are in the gitignored `.context/verification/` directory. No credentials or transcript contents are part of the repository.
+
+## Version 1.0.1 installer and releases
+
+Verified on 2026-09-10. This installer was built for manual installation; the existing `/Applications/AIUsage.app` was left in place.
+
+| Check | Result |
+| --- | --- |
+| Regression tests | 25 pass; opt-in live benchmark skipped |
+| App icon | All standard/Retina macOS sizes packaged with `iconutil`; 128px rendering and Finder installer visually checked |
+| DMG integrity | `hdiutil verify` passes; app signature verified again inside the mounted final image |
+| Installer contents | Version 1.0.1 / build 2, app icon, volume icon, Applications shortcut, install instructions, and saved Finder layout verified |
+| Duplicate copies | Opening `build/AIUsage.app` while the installed app ran exited the new instance; the original installed process remained the only running copy |
+| Workflow definitions | `actionlint` passes for pull-request CI and automatic main releases |
+| Release numbering | Run 1 produces 1.0.2 / build 3; run 2 produces 1.0.3 / build 4; invalid counters rejected |
+| Headless release build | Built and mounted 1.0.2 / build 3 with overrides; saved layout, volume icon, and signature verified |
+| Publishing retries | Mocked CLI checks cover new release creation, resuming a draft upload, preserving a published release, and rejecting a conflicting commit |
+
+Release numbering is applied to the assembled bundle through environment overrides. The workflow does not edit or push the source plist. The initial 1.0.1 release is built locally; automatic publishing begins when the workflow changes reach `main`. These builds use ad-hoc signing and are not notarized by Apple.

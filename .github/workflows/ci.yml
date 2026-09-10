@@ -1,0 +1,23 @@
+name: Build and test
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-26
+    timeout-minutes: 20
+    env:
+      AIUSAGE_DMG_NO_FINDER: "1"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: make test
+      - name: Exercise release version overrides
+        run: bash scripts/release-version.sh 1 >> "$GITHUB_ENV"
+      - run: make dmg
