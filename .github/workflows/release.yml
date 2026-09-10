@@ -1,0 +1,30 @@
+name: Release DMG
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    if: github.ref == 'refs/heads/main'
+    runs-on: macos-26
+    timeout-minutes: 20
+    env:
+      AIUSAGE_DMG_NO_FINDER: "1"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Assign a release version
+        run: bash scripts/release-version.sh "$GITHUB_RUN_NUMBER" >> "$GITHUB_ENV"
+      - run: make test
+      - name: Build and verify the installer
+        run: make dmg
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/publish-release.sh "$GITHUB_SHA"

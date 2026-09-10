@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 import AIUsageCore
 
 struct PopoverView: View {
@@ -6,8 +7,23 @@ struct PopoverView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack {
-                Label("AI Usage", systemImage: "chart.bar.fill").font(.headline)
+                Label {
+                    Text("AI Usage")
+                } icon: {
+                    Image(nsImage: NSApplication.shared.applicationIconImage)
+                        .resizable().frame(width: 24, height: 24)
+                }.font(.headline)
                 Spacer()
+                Button {
+                    let location = Bundle.main.bundleURL.path
+                    NSApplication.shared.orderFrontStandardAboutPanel(options: [
+                        .credits: NSAttributedString(string: "Claude Code + Codex usage\n\nRunning from:\n\(location)")
+                    ])
+                    NSApplication.shared.activate()
+                } label: { Image(systemName: "info.circle") }
+                    .buttonStyle(.plain)
+                    .help("About AIUsage: version and running copy")
+                    .accessibilityLabel("About AIUsage")
                 Button { store.refreshNow() } label: { Image(systemName: "arrow.clockwise") }
                     .buttonStyle(.plain)
                     .disabled(store.isRefreshing)

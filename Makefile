@@ -1,4 +1,4 @@
-.PHONY: build debug run install test logs clean
+.PHONY: build debug run install dmg test logs clean
 
 build:
 	bash scripts/build-app.sh release
@@ -12,6 +12,9 @@ run: build
 install: build
 	ditto build/AIUsage.app /Applications/AIUsage.app
 	bash scripts/run-app.sh /Applications/AIUsage.app
+
+dmg:
+	bash scripts/build-dmg.sh
 
 test:
 	bash scripts/test.sh
