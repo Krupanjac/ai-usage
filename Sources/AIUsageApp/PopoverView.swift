@@ -1,0 +1,28 @@
+import SwiftUI
+import AIUsageCore
+
+struct PopoverView: View {
+    @Bindable var store: UsageStore
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack {
+                Label("AI Usage", systemImage: "chart.bar.fill").font(.headline)
+                Spacer()
+                Button { store.refreshNow() } label: { Image(systemName: "arrow.clockwise") }
+                    .buttonStyle(.plain)
+                    .disabled(store.isRefreshing)
+                    .help("Refresh usage (at least one minute between requests; server retry times are respected)")
+                    .accessibilityLabel("Refresh usage")
+            }
+            ForEach(Provider.allCases) { provider in ProviderCardView(state: store.state(for: provider)) }
+            Divider()
+            UsageChartView(store: store)
+            if let message = store.cacheMessage { Text(message).font(.caption2).foregroundStyle(.secondary) }
+            Divider()
+            FooterView(store: store)
+        }
+        .padding(16)
+        .frame(width: 360)
+        .onAppear { store.popoverOpened() }
+    }
+}
